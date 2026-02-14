@@ -33,3 +33,16 @@ When Jane uses Chartify, she can see how different song elements and audio featu
 **User Story 2**: As a _music producer_, I want to visualize how filtering for song elements such as danceability, tempo, or acousticness will affect song popularity (at either high or low values) in order to guide me in my songwriting process.
 
 **User Story 3**: As a _music producer_, I want to select the most liked songs on Youtube, in order to determine which genres perform best on a video platform.
+
+## Section 4: Exploratory Data Analysis
+
+
+## Section 5: App Sketch & Description
+
+The visual mockup of our app is shown below. It features a set of KPI summary cards at the top for the main metrics of interest (likes, comments, etc) as well as multiple perspectives from the source data. 
+
+These multiple perspectives include: a stacked bar chart that compares platform distribution (Spotify vs YouTube) and the licensing status within each platform, a song bar chart to display the numerical feature values and compare their proportions, a tabular view that highlights the top songs and allows for easy comparison amongst them, and finally a central scatter plot that visualizes relationships between a selected performance metric and the song features. This scatter chart directly enables pattern discovery by showing where certain song clusters are with the best metric values.
+
+Along with these main visualizations and displayed metrics, the dashboard app also includes a collapsible filter panel (with radio buttons, sliders, dropdown etc.) which allows for further filtering interactions and updates reactively based on user selections.
+
+![Sketch](../img/sketch.png)
