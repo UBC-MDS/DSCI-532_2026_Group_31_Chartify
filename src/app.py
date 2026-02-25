@@ -1,109 +1,112 @@
-
-"""
-Music Analytics Dashboard — skeleton
-Run:  pip install dash plotly  &&  python app.py  →  http://127.0.0.1:8050
-"""
-
-import dash
-from dash import dcc, html
+from shiny import App, ui, render
 import plotly.express as px
 import pandas as pd
 import numpy as np
 
-app = dash.Dash(__name__, title="Chartify Dashboard")
 
-# Sample data for the one real chart
 np.random.seed(42)
 df = pd.DataFrame({
-    "streams":     np.random.randint(10_000, 5_000_000, 100),
-    "energy":      np.random.uniform(0, 1, 100),
-    "danceability":np.random.uniform(0, 1, 100),
-    "artist":      np.random.choice(["Artist A", "Artist B", "Artist C"], 100),
+    "streams": np.random.randint(10_000, 5_000_000, 100),
+    "energy": np.random.uniform(0, 1, 100),
+    "danceability": np.random.uniform(0, 1, 100),
+    "artist": np.random.choice(["Artist A", "Artist B", "Artist C"], 100),
 })
 
-scatter = px.scatter(
-    df, x="streams", y="energy", color="artist",
-    title="Energy vs. Streams (placeholder data)",
-)
+# Base scatter figure
+def make_scatter():
+    return px.scatter(
+        df,
+        x="streams",
+        y="energy",
+        color="artist",
+        title="Energy vs. Streams (placeholder data)",
+    )
 
-def kpi_card(label):
-    return html.Div([
-        html.Strong(label),
-        html.P("—"),
-    ])
 
-def chart_card(title, description):
-    return html.Div([
-        html.H4(title),
-        html.P(description),
-    ])
+app_ui = ui.page_fluid(
 
-app.layout = html.Div([
+    ui.h1("Music Analytics Dashboard"),
 
-    html.H1("Music Analytics Dashboard"),
-
-    html.Div([
+    ui.layout_sidebar(
 
         # Sidebar
-        html.Div([
-            html.H4("Filters"),
+        ui.panel_sidebar(
+            ui.h4("Filters"),
 
-            html.Label("Artist"),
-            dcc.Dropdown(id="filter-artist", placeholder="Select artist…"),
-
-            html.Label("Metric of Interest"),
-            dcc.Dropdown(
-                id="filter-metric",
-                options=["Streams", "Likes", "Views", "Comments"],
-                value="Streams",
-                clearable=False,
+            ui.input_select(
+                "filter_artist",
+                "Artist",
+                choices=["Artist A", "Artist B", "Artist C"],
+                selected=None,
             ),
 
-            html.Label("Platform"),
-            dcc.RadioItems(
-                id="filter-platform",
-                options=["Spotify", "YouTube", "Both"],
-                value="Both",
+            ui.input_select(
+                "filter_metric",
+                "Metric of Interest",
+                choices=["Streams", "Likes", "Views", "Comments"],
+                selected="Streams",
             ),
 
-            html.Label("Licensed"),
-            dcc.RadioItems(
-                id="filter-licensed",
-                options=["Yes", "No", "All"],
-                value="All",
+            ui.input_radio_buttons(
+                "filter_platform",
+                "Platform",
+                choices=["Spotify", "YouTube", "Both"],
+                selected="Both",
             ),
-        ], style={"width": "200px", "flexShrink": "0"}),
+
+            ui.input_radio_buttons(
+                "filter_licensed",
+                "Licensed",
+                choices=["Yes", "No", "All"],
+                selected="All",
+            ),
+            width=3,
+        ),
 
         # Main content
-        html.Div([
+        ui.panel_main(
 
-            # KPI cards
-            html.Div([
-                kpi_card("Streams"),
-                kpi_card("Likes"),
-                kpi_card("Views"),
-                kpi_card("Avg. Duration"),
-            ], style={"display": "flex", "gap": "16px"}),
+            # KPI Cards Row
+            ui.row(
+                ui.column(3, ui.card(ui.strong("Streams"), ui.p("—"))),
+                ui.column(3, ui.card(ui.strong("Likes"), ui.p("—"))),
+                ui.column(3, ui.card(ui.strong("Views"), ui.p("—"))),
+                ui.column(3, ui.card(ui.strong("Avg. Duration"), ui.p("—"))),
+            ),
 
-            # Real scatter chart
-            dcc.Graph(figure=scatter),
+            ui.br(),
 
-            # Bottom two placeholders
-            html.Div([
-                chart_card(
-                    "Top Songs — Feature Profiles",
-                    "Parallel-coordinates chart for top 3–5 songs.",
+            # Scatter plot
+            ui.output_plot("scatter_plot", height="400px"),
+
+            ui.br(),
+
+            # Bottom placeholders
+            ui.row(
+                ui.column(
+                    6,
+                    ui.card(
+                        ui.h4("Top Songs — Feature Profiles"),
+                        ui.p("Parallel-coordinates chart for top 3–5 songs."),
+                    ),
                 ),
-                chart_card(
-                    "Avg. Audio Features (Bar)",
-                    "Bar chart of average speechiness, energy, danceability, loudness.",
+                ui.column(
+                    6,
+                    ui.card(
+                        ui.h4("Avg. Audio Features (Bar)"),
+                        ui.p("Bar chart of average speechiness, energy, danceability, loudness."),
+                    ),
                 ),
-            ], style={"display": "flex", "gap": "16px"}),
+            ),
+        ),
+    ),
+)
 
-        ], style={"flex": "1"}),
+def server(input, output, session):
 
-    ], style={"display": "flex", "gap": "24px", "padding": "16px"}),
-])
+    @output
+    @render.plot
+    def scatter_plot():
+        return make_scatter()
 
-if __name__ == "__main__":
-    app.run(debug=True)
+app = App(app_ui, server)
