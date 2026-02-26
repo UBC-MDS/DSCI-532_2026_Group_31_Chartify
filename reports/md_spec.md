@@ -13,3 +13,17 @@
 | ID          | Type  | Shiny Widget/Renderer | Depends On  | Job Story |
 | ----------- | ----- | --------------------- | ----------- | --------- |
 | `sample_id` | Input | @shiny.widget         | `sample_id` | #1        |
+
+## Reactivity Diagram
+
+```mermaid
+Mermaid flowchart goes here
+```
+
+## Calculation Details
+
+For each @reactive.calc in your diagram, briefly describe:
+
+1. Which inputs it depends on.
+2. What transformation it performs (e.g., "filters rows to the selected year range and region(s)").
+3. Which outputs consume it.
