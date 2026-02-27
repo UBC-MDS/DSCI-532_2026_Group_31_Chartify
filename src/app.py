@@ -2,7 +2,7 @@ from shiny import App, ui, render, reactive
 import plotly.express as px
 import pandas as pd
 import numpy as np
-import get_data as gd
+from . import get_data as gd
 
 
 df = gd.get_data()
