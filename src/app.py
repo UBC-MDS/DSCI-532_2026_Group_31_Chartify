@@ -129,7 +129,7 @@ def server(input, output, session):
     
     # Create reactive calc to be used in overall display. Needs an Input
     # Of Artist and Platform. Default Selections are Beyonce and No Platforms.
-        
+    @reactive.calc
     def filtered():
         # Default filtered_df is Beyonce with both platforms selected
         artist = input.artist().strip()

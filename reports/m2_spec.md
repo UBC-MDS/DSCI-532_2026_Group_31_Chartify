@@ -10,8 +10,10 @@
 
 ## Component Inventory
 
-| ID              | Type  | Shiny Widget/Renderer | Depends On | Job Story |
-| --------------- | ----- | --------------------- | ---------- | --------- |
+| ID          | Type  | Shiny Widget/Renderer | Depends On  | Job Story |
+| ----------- | ----- | --------------------- | ----------- | --------- |
+| `filter_platform` | Input | `ui.value_box()`         | None         | #1, #2     |
+| `card_avg_views` | Output |  `@render.text`          | 'filtered' | #2, #3 |
 | `filter_metric` | Input | `ui.input_select()`   | None       | #3        |
 
 ## Reactivity Diagram
