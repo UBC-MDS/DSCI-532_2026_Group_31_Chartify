@@ -20,6 +20,32 @@ def make_scatter():
 
 app_ui = ui.page_fluid(
 
+    ui.tags.style("""
+        * {
+            font-family: Helvetica, sans-serif;
+        }
+        body {
+            background-color: #191414;
+            color: white;
+        }
+        .card {
+            background-color: #1e1e1e;
+            border-color: #333333;
+            color: white;
+        }
+        .card h4 {
+            color: white;
+        }
+        .form-control {
+            background-color: #2a2a2a;
+            color: white;
+            border-color: #333333;
+        }
+        .form-control::placeholder {
+            color: #888888;
+        }
+    """),
+
     ui.h1("Music Analytics Dashboard"),
 
     ui.layout_sidebar(
