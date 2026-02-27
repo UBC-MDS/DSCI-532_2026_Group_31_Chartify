@@ -70,7 +70,7 @@ app_ui = ui.page_fluid(
             ui.input_radio_buttons(
                 "filter_platform",
                 "Platform",
-                choices=["Spotify", "YouTube", "Both"],
+                choices=["Spotify", "Youtube", "Both"],
                 selected="Both",
             ),
 
@@ -96,7 +96,6 @@ app_ui = ui.page_fluid(
                                          value=ui.output_ui("card_avg_likes"),
                                          #theme=
                                           )),
-                # ui.column(3, ui.card(ui.strong("Views"), ui.p("—"))),
                 ui.column(3, ui.value_box(title="Avg. Views", 
                                           value=ui.output_text("card_avg_views")
                                         #   theme =
@@ -136,7 +135,7 @@ def server(input, output, session):
     
     # Create reactive calc to be used in overall display. Needs an Input
     # Of Artist and Platform. Default Selections are Beyonce and No Platforms.
-    @reactive.calc
+        
     def filtered():
         # Default filtered_df is Beyonce with both platforms selected
         artist = input.artist().strip()
@@ -171,12 +170,15 @@ def server(input, output, session):
     def card_avg_views():
         data = filtered()
     
-        avg = round(data["Views"].mean(),0)
-        return f"{avg:,.0f}"
+        if (df["Views"] != 0).any():
+                avg_views = round(data["Views"].mean(),0)
+                return f"{avg_views:,.0f}"
+        else:
+            return "0"
 
     @render.ui
     def card_avg_stream():
-        df = filtered_df()
+        df = filtered()
         if (df["Stream"] != 0).any():
             avg_stream = df["Stream"].mean()
             display = f"{avg_stream:,0f}"
@@ -187,7 +189,7 @@ def server(input, output, session):
 
     @render.ui
     def card_avg_likes():
-        df = filtered_df()
+        df = filtered()
         if (df["Likes"] != 0).any():
             avg_likes = df["Likes"].mean()
             display = f"{avg_likes:,0f}"

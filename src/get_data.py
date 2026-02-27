@@ -16,8 +16,10 @@ def get_data():
     df = kagglehub.dataset_load(
         KaggleDatasetAdapter.PANDAS,
         "sanjanchaudhari/spotify-dataset/versions/1",
-        "cleaned_dataset.csv",
+        "cleaned_dataset.csv", 
+        # pandas_kwargs={"encoding": "latin-1", "on_bad_lines": "skip", "engine": "python"}
         )
+
     
     # Apply normalization of characters to Artist, Song and Album Names
     df['Artist'] = df['Artist'].apply(normalize_text)
