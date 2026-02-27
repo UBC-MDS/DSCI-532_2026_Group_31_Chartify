@@ -123,6 +123,8 @@ def server(input, output, session):
     @render.plot
     def scatter_plot():
         return make_scatter()
+    
+    @output
     @render.data_frame
     def top_5():
         df_top5 = filtered()
@@ -130,5 +132,10 @@ def server(input, output, session):
         df_top5 = df_top5[['Track', 'Album', 'most_playedon', 'Stream']].iloc[:5]
         
         return render.DataGrid(df_top5)
+    
+    @output
+    @render.text
+    def card_avg_views():
+
 
 app = App(app_ui, server)
