@@ -90,7 +90,11 @@ app_ui = ui.page_fluid(
             ui.row(
                 ui.column(3, ui.card(ui.strong("Streams"), ui.p("—"))),
                 ui.column(3, ui.card(ui.strong("Likes"), ui.p("—"))),
-                ui.column(3, ui.card(ui.strong("Views"), ui.p("—"))),
+                # ui.column(3, ui.card(ui.strong("Views"), ui.p("—"))),
+                ui.column(3, ui.value_box(title="Avg. Views", 
+                                          value=ui.output_text("card_avg_views")
+                                        #   theme =
+                                        )),
                 ui.column(3, ui.card(ui.strong("Avg. Duration"), ui.p("—"))),
             ),
 
@@ -133,7 +137,8 @@ def server(input, output, session):
         platform = input.filter_platform()
 
         # Filter by artist first
-        filtered_df = df[df["Artist"].str.lower() == artist.lower()]
+        if artist: # only filter if non-empty (prevents a fully empty df)
+            filtered_df = df[df["Artist"].str.lower() == artist.lower()]
 
         # Then apply platform filter if not "Both"
         if platform != "Both":
@@ -145,6 +150,8 @@ def server(input, output, session):
     @render.plot
     def scatter_plot():
         return make_scatter()
+    
+    @output
     @render.data_frame
     def top_5():
         df_top5 = filtered()
@@ -152,5 +159,13 @@ def server(input, output, session):
         df_top5 = df_top5[['Track', 'Album', 'most_playedon', 'Stream']].iloc[:5]
         
         return render.DataGrid(df_top5)
+    
+    @output
+    @render.text
+    def card_avg_views():
+        data = filtered()
+    
+        avg = round(data["Views"].mean(),0)
+        return f"{avg:,.0f}"
 
 app = App(app_ui, server)
