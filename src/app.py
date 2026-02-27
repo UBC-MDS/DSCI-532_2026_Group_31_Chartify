@@ -136,6 +136,9 @@ def server(input, output, session):
     @output
     @render.text
     def card_avg_views():
-
+        data = filtered()
+        
+        avg = round(data["Views"].mean(),0)
+        return avg
 
 app = App(app_ui, server)
