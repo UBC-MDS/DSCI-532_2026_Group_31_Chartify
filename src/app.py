@@ -2,7 +2,7 @@ from shiny import App, ui, render, reactive
 import plotly.express as px
 import pandas as pd
 import numpy as np
-import get_data as gd
+from . import get_data as gd
 
 
 df = gd.get_data()
@@ -19,6 +19,32 @@ def make_scatter():
 
 
 app_ui = ui.page_fluid(
+
+    ui.tags.style("""
+        * {
+            font-family: Helvetica, sans-serif;
+        }
+        body {
+            background-color: #191414;
+            color: white;
+        }
+        .card {
+            background-color: #1e1e1e;
+            border-color: #333333;
+            color: white;
+        }
+        .card h4 {
+            color: white;
+        }
+        .form-control {
+            background-color: #2a2a2a;
+            color: white;
+            border-color: #333333;
+        }
+        .form-control::placeholder {
+            color: #888888;
+        }
+    """),
 
     ui.h1("Music Analytics Dashboard"),
 

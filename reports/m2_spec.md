@@ -10,9 +10,9 @@
 
 ## Component Inventory
 
-| ID          | Type  | Shiny Widget/Renderer | Depends On  | Job Story |
-| ----------- | ----- | --------------------- | ----------- | --------- |
-| `sample_id` | Input | @shiny.widget         | `sample_id` | #1        |
+| ID              | Type  | Shiny Widget/Renderer | Depends On | Job Story |
+| --------------- | ----- | --------------------- | ---------- | --------- |
+| `filter_metric` | Input | `ui.input_select()`   | None       | #3        |
 
 ## Reactivity Diagram
 
