@@ -12,7 +12,8 @@
 
 | ID          | Type  | Shiny Widget/Renderer | Depends On  | Job Story |
 | ----------- | ----- | --------------------- | ----------- | --------- |
-| `sample_id` | Input | @shiny.widget         | `sample_id` | #1        |
+| `filter_platform` | Input | `ui.value_box()`         | -          | #1, #2     |
+| `card_avg_views` | Output |  `@render.text`          | 'filtered' | #1, #2, #3 |
 
 ## Reactivity Diagram
 
