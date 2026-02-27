@@ -1,6 +1,6 @@
 # App Specification
 
-## Job Stories
+### 2.1 Updated Job Stories
 
 | #   | Job Story                                                                                                                                                                         | Status      | Notes |
 | --- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ----- |
@@ -8,22 +8,37 @@
 | 2   | When I am writing a new song for Youtube, I want to see the most liked/viewed songs on that platform so I can determine what song features are associated with stream popularity. | In Progress |       |
 | 3   | When I am producing a new song, I want to see what song features perform best with specific KPI metrics so I know how to tailor my production process for high performance.       | In Progress |       |
 
-## Component Inventory
+### 2.2 Component Inventory
 
-| ID          | Type  | Shiny Widget/Renderer | Depends On  | Job Story |
-| ----------- | ----- | --------------------- | ----------- | --------- |
-| `sample_id` | Input | @shiny.widget         | `sample_id` | #1        |
+| ID                   | Type          | Shiny Widget/Renderer     | Depends On                       | Job Story |
+| -------------------- | ------------- | ------------------------- | -------------------------------- | --------- |
+| `input_artist`       | Input         | `ui.input_select()`       | —                                | #1        |
+| `input_platform`     | Input         | `ui.input_radio_button()` | —                                | #1        |
+| `input_metric`       | Input         | `ui.input_select()`       | —                                | #1        |
+| `filtered_df`        | Reactive calc | `@reactive.calc`          | `input_artist`, `input_platform` | #1        |
+| `card_avg_views`     | Output        | `@render.ui`              | `filtered_df`                    | #1        |
+| `card_avg_stream`    | Output        | `@render.ui`              | `filtered_df`                    | #1        |
+| `card_avg_likes`     | Output        | `@render.ui`              | `filtered_df`                    | #1        |
+| `table_top5songs`    | Output        | `@render.data_frame`      | `filtered_df`                    | #1        |
+| `scatterplot_metric` | Output        | `@render.plot`            | `input_metric`, `filtered_df`    | #1        |
 
-## Reactivity Diagram
+### 2.3 Reactivity Diagram
 
 ```mermaid
-Mermaid flowchart goes here
+flowchart TD
+  In1[/input_artist/] --> F{{filtered_df}}
+  In2[/input_platform/] --> F
+  In3[/input_metric/] --> P1([scatterplot_metric])
+  F --> C1([card_avg_views])
+  F --> C2([card_avg_stream])
+  F --> C3([card_avg_likes])
+  F --> T1([table_top5songs])
+  F --> P1
 ```
 
-## Calculation Details
+### 2.4 Calculation Details
 
-For each @reactive.calc in your diagram, briefly describe:
-
-1. Which inputs it depends on.
-2. What transformation it performs (e.g., "filters rows to the selected year range and region(s)").
-3. Which outputs consume it.
+**`filtered_df`**
+- **Depends on:** `input_artist`, `input_platform`
+- **Transformation:** Filters rows to the selected artist and platform. If specific artist is not selected, artist "Beyonce" is set as default. If specific platform is not selected, platform "Both" is set as default.
+- **Consumed by:** `card_avg_views`, `card_avg_stream`, `card_avg_likes`, `table_top5songs`, `scatterplot_metric`
