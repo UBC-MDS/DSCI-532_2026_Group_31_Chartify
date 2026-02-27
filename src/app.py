@@ -111,7 +111,8 @@ def server(input, output, session):
         platform = input.filter_platform()
 
         # Filter by artist first
-        filtered_df = df[df["Artist"].str.lower() == artist.lower()]
+        if artist: # only filter if non-empty (prevents a fully empty df)
+            filtered_df = df[df["Artist"].str.lower() == artist.lower()]
 
         # Then apply platform filter if not "Both"
         if platform != "Both":
@@ -142,6 +143,6 @@ def server(input, output, session):
             return "No data"
     
         avg = round(data["Views"].mean(),0)
-        return avg
+        return f"{avg:,.0f}"
 
 app = App(app_ui, server)
