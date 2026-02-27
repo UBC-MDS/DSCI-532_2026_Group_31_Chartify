@@ -64,7 +64,11 @@ app_ui = ui.page_fluid(
             ui.row(
                 ui.column(3, ui.card(ui.strong("Streams"), ui.p("—"))),
                 ui.column(3, ui.card(ui.strong("Likes"), ui.p("—"))),
-                ui.column(3, ui.card(ui.strong("Views"), ui.p("—"))),
+                # ui.column(3, ui.card(ui.strong("Views"), ui.p("—"))),
+                ui.column(3, ui.value_box(title="Avg. Views", 
+                                          value=ui.output_text("card_avg_views")
+                                        #   theme =
+                                        )),
                 ui.column(3, ui.card(ui.strong("Avg. Duration"), ui.p("—"))),
             ),
 
