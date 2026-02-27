@@ -138,6 +138,9 @@ def server(input, output, session):
     def card_avg_views():
         data = filtered()
         
+        if data.empty: # edge case if no data before/after filtering
+            return "No data"
+    
         avg = round(data["Views"].mean(),0)
         return avg
 
