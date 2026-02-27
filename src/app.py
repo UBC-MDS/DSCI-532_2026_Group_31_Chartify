@@ -139,7 +139,10 @@ def server(input, output, session):
     def card_avg_views():
         data = filtered()
     
-        avg = round(data["Views"].mean(),0)
-        return f"{avg:,.0f}"
+        if (df["Views"] != 0).any():
+                avg_views = round(data["Views"].mean(),0)
+                return f"{avg_views:,.0f}"
+        else:
+            return "0"
 
 app = App(app_ui, server)
