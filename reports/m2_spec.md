@@ -12,9 +12,9 @@
 
 | ID                   | Type          | Shiny Widget/Renderer     | Depends On                       | Job Story |
 | -------------------- | ------------- | ------------------------- | -------------------------------- | --------- |
-| `input_artist`       | Input         | `ui.input_select()`       | —                                | #1        |
-| `input_platform`     | Input         | `ui.input_radio_button()` | —                                | #1        |
-| `input_metric`       | Input         | `ui.input_select()`       | —                                | #1        |
+| `input_artist`       | Input         | `ui.input_select()`       | None                             | #1        |
+| `input_platform`     | Input         | `ui.input_radio_button()` | None                             | #1        |
+| `filter_metric`      | Input         | `ui.input_select()`       | None                             | #1        |
 | `filtered_df`        | Reactive calc | `@reactive.calc`          | `input_artist`, `input_platform` | #1        |
 | `card_avg_views`     | Output        | `@render.ui`              | `filtered_df`                    | #1        |
 | `card_avg_stream`    | Output        | `@render.ui`              | `filtered_df`                    | #1        |
