@@ -88,8 +88,14 @@ app_ui = ui.page_fluid(
 
             # KPI Cards Row
             ui.row(
-                ui.column(3, ui.card(ui.strong("Streams"), ui.p("—"))),
-                ui.column(3, ui.card(ui.strong("Likes"), ui.p("—"))),
+                ui.column(3, ui.value_box(title="Avg. Stream",
+                                         value=ui.output_ui("card_avg_stream"),
+                                         #theme=
+                                          )),
+                ui.column(3, ui.value_box(title="Avg. Likes",
+                                         value=ui.output_ui("card_avg_likes"),
+                                         #theme=
+                                          )),
                 # ui.column(3, ui.card(ui.strong("Views"), ui.p("—"))),
                 ui.column(3, ui.value_box(title="Avg. Views", 
                                           value=ui.output_text("card_avg_views")
@@ -167,5 +173,27 @@ def server(input, output, session):
     
         avg = round(data["Views"].mean(),0)
         return f"{avg:,.0f}"
+
+    @render.ui
+    def card_avg_stream():
+        df = filtered_df()
+        if (df["Stream"] != 0).any():
+            avg_stream = df["Stream"].mean()
+            display = f"{avg_stream:,0f}"
+        else:
+            display = "0"
+            
+        return ui.value_box("Average Stream", display)
+
+    @render.ui
+    def card_avg_likes():
+        df = filtered_df()
+        if (df["Likes"] != 0).any():
+            avg_likes = df["Likes"].mean()
+            display = f"{avg_likes:,0f}"
+        else:
+            display = "0"
+            
+        return ui.value_box("Average Likes", display)
 
 app = App(app_ui, server)
