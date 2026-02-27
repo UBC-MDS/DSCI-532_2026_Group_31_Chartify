@@ -1,26 +1,22 @@
-from shiny import App, ui, render
+from shiny import App, ui, render, reactive
 import plotly.express as px
 import pandas as pd
 import numpy as np
+import get_data as gd
 
 
-np.random.seed(42)
-df = pd.DataFrame({
-    "streams": np.random.randint(10_000, 5_000_000, 100),
-    "energy": np.random.uniform(0, 1, 100),
-    "danceability": np.random.uniform(0, 1, 100),
-    "artist": np.random.choice(["Artist A", "Artist B", "Artist C"], 100),
-})
+df = gd.get_data()
+sample_artists = ['Shakira', 'Gorrilaz', 'Beyonce', 'Coldplay', 'Michael Jackson']
 
-# Base scatter figure
-def make_scatter():
-    return px.scatter(
-        df,
-        x="streams",
-        y="energy",
-        color="artist",
-        title="Energy vs. Streams (placeholder data)",
-    )
+# # Base scatter figure
+# def make_scatter():
+#     return px.scatter(
+#         df,
+#         x="streams",
+#         y="energy",
+#         color="artist",
+#         title="Energy vs. Streams (placeholder data)",
+#     )
 
 
 app_ui = ui.page_fluid(
@@ -33,13 +29,17 @@ app_ui = ui.page_fluid(
         ui.panel_sidebar(
             ui.h4("Filters"),
 
+            # ui.input_text(
+            #     "artist",
+            #     "Enter The Artist's Name",
+            #     value='Beyonce',
+            # ),
             ui.input_select(
-                "filter_artist",
-                "Artist",
-                choices=["Artist A", "Artist B", "Artist C"],
-                selected=None,
-            ),
-
+                "artist",
+                "Select An Artist Below:", 
+                sample_artists),
+            
+            
             ui.input_select(
                 "filter_metric",
                 "Metric of Interest",
@@ -86,8 +86,8 @@ app_ui = ui.page_fluid(
                 ui.column(
                     6,
                     ui.card(
-                        ui.h4("Top Songs — Feature Profiles"),
-                        ui.p("Parallel-coordinates chart for top 3–5 songs."),
+                        ui.h4("Top 5 Songs"),
+                        ui.output_data_frame("top_5"),
                     ),
                 ),
                 ui.column(
@@ -103,10 +103,34 @@ app_ui = ui.page_fluid(
 )
 
 def server(input, output, session):
+    
+    # Create reactive calc to be used in overall display. Needs an Input
+    # Of Artist and Platform. Default Selections are Beyonce and No Platforms.
+    @reactive.calc
+    def filtered():
+        # Default filtered_df is Beyonce with both platforms selected
+        artist = input.artist()
+        platform = input.filter_platform()
+
+        # Filter by artist first
+        filtered_df = df[df["Artist"] == artist]
+
+        # Then apply platform filter if not "Both"
+        if platform != "Both":
+            filtered_df = filtered_df[filtered_df["most_playedon"] == platform]
+
+        return filtered_df
 
     @output
-    @render.plot
-    def scatter_plot():
-        return make_scatter()
+    # @render.plot
+    # def scatter_plot():
+    #     return make_scatter()
+    @render.data_frame
+    def top_5():
+        df_top5 = filtered()
+        df_top5 = df_top5.sort_values(by=['Stream'], ascending = False)
+        df_top5 = df_top5[['Track', 'Album', 'most_playedon', 'Stream']].iloc[:5]
+        
+        return render.DataGrid(df_top5)
 
 app = App(app_ui, server)
