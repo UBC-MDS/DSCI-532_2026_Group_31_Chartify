@@ -6,17 +6,16 @@ import get_data as gd
 
 
 df = gd.get_data()
-sample_artists = ['Shakira', 'Gorrilaz', 'Beyonce', 'Coldplay', 'Michael Jackson']
 
-# # Base scatter figure
-# def make_scatter():
-#     return px.scatter(
-#         df,
-#         x="streams",
-#         y="energy",
-#         color="artist",
-#         title="Energy vs. Streams (placeholder data)",
-#     )
+# Base scatter figure
+def make_scatter():
+    return px.scatter(
+        df,
+        x="streams",
+        y="energy",
+        color="artist",
+        title="Energy vs. Streams (placeholder data)",
+    )
 
 
 app_ui = ui.page_fluid(
@@ -29,17 +28,12 @@ app_ui = ui.page_fluid(
         ui.panel_sidebar(
             ui.h4("Filters"),
 
-            # ui.input_text(
-            #     "artist",
-            #     "Enter The Artist's Name",
-            #     value='Beyonce',
-            # ),
-            ui.input_select(
+            ui.input_text(
                 "artist",
-                "Select An Artist Below:", 
-                sample_artists),
-            
-            
+                "Enter The Artist's Name",
+                value='Beyonce',
+            ),
+
             ui.input_select(
                 "filter_metric",
                 "Metric of Interest",
@@ -109,11 +103,11 @@ def server(input, output, session):
     @reactive.calc
     def filtered():
         # Default filtered_df is Beyonce with both platforms selected
-        artist = input.artist()
+        artist = input.artist().strip()
         platform = input.filter_platform()
 
         # Filter by artist first
-        filtered_df = df[df["Artist"] == artist]
+        filtered_df = df[df["Artist"].str.lower() == artist.lower()]
 
         # Then apply platform filter if not "Both"
         if platform != "Both":
@@ -122,9 +116,9 @@ def server(input, output, session):
         return filtered_df
 
     @output
-    # @render.plot
-    # def scatter_plot():
-    #     return make_scatter()
+    @render.plot
+    def scatter_plot():
+        return make_scatter()
     @render.data_frame
     def top_5():
         df_top5 = filtered()
