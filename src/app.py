@@ -1,5 +1,4 @@
 from shiny import App, ui, render, reactive
-from shinywidgets import output_widget, render_widget
 import plotly.express as px
 import pandas as pd
 import matplotlib.pyplot as plt
