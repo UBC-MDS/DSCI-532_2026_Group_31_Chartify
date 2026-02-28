@@ -6,7 +6,7 @@
 ## Users
 
 Chartify is a data analytics dashboard that leverages Spotify's song features dataset to uncover patterns and characteristics of successful songs. Below is a small preview of it's features and how to interact with it: 
-
+![](img/demo.gif)
 
 Built for music producers and A&R professionals, it provides actionable insights on tempo, energy, danceability, and other key metrics that correlate with chart performance and cross-platform popularity. The main goal of this to to help   stakeholders make data-driven decisions in hit song production.
 
