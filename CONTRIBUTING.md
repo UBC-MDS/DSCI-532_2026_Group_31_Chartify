@@ -12,9 +12,9 @@ git clone https://github.com/UBC-MDS/DSCI-532_2026_Group_31_Chartify.git
 cd DSCI-532_2026_Group_31_Chartify/
 
 # Optional (but suggested): make a fresh environment
-conda create -n chartify python=3.11 # will install auto-pip gracefully 
+conda env create -f environment.yml
+# Activate environment
 conda activate chartify
-pip install -r requirements.txt
 
 # Run draft application locally  
 python src/app.py # → http://127.0.0.1:8050
