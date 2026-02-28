@@ -28,28 +28,67 @@ NUMERICAL_FEATURES = [
 app_ui = ui.page_fluid(
 
     ui.tags.style("""
-    * { font-family: Helvetica, sans-serif; }
+    @import url('https://fonts.googleapis.com/css2?family=Circular+Std&display=swap');
+
+    * { font-family: 'Circular Std', Helvetica, sans-serif; }
     body { background-color: #191414; color: white; }
     .card { background-color: #1e1e1e; border-color: #333333; color: white; }
     .card h4 { color: white; }
     .form-control { background-color: #2a2a2a; color: white; border-color: #333333; }
     .form-control::placeholder { color: #888888; }
-    
-    /* Fix table header text */
+
+    /* Table header text */
     thead th, .shiny-data-grid thead th {
         color: #000000 !important;
-        background-color: #c8c8c8 !important;
+        background-color: #1DB954 !important;
+    }
+                  
+    /* Title */
+    h1 {
+        font-family: 'Circular Std', Helvetica, sans-serif;
+        font-weight: 900;
+        color: white !important;
+        -webkit-text-fill-color: white !important;
+    }
+
+    /* Card green outlines */
+    .card {
+        border: 1px solid #1DB954 !important;
     }
     
-    /* Fix radio button label visibility */
-    .shiny-input-radiogroup label,
-    .control-label,
-    .radio label {
+    /* Green border on ALL dropdowns/inputs */
+    .form-control, .selectize-input, select.form-control {
+        border: 1px solid #1DB954 !important;
+        background-color: #2a2a2a !important;
         color: white !important;
     }
+                  
+    /* Fix dropdown background (the select element itself) */
+    .shiny-input-select select,
+    select {
+        background-color: #2a2a2a !important;
+        color: white !important;
+        border: 1px solid #1DB954 !important;
+    }
+
+    /* Right green border line */
+    .bslib-sidebar-layout > .main {
+        border-left: 2px solid #1DB954 !important;
+    }
+    
+    /* Sidebar background */
+    .bslib-sidebar-layout > .sidebar {
+        background-color: #111111 !important;
+        border-right: 2px solid #1DB954 !important;
+    }
+
+    /* Radio button label visibility */
+    .shiny-input-radiogroup label,
+    .control-label,
+    .radio label { color: white !important; }
 """),
 
-    ui.h1("Music Analytics Dashboard"),
+    ui.h1("Chartify"),
 
     ui.layout_sidebar(
 
@@ -108,7 +147,7 @@ def server(input, output, session):
                 plot_bgcolor="rgba(0,0,0,0)"
             )
         features_present = [f for f in NUMERICAL_FEATURES if f in data.columns]
-        plot_df = data.melt(
+        plot_df = data.dropna(subset=[metric_col]).melt(
             id_vars=[metric_col, "Track"],
             value_vars=features_present,
             var_name="Feature",
