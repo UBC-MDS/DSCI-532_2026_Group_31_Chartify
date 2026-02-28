@@ -10,17 +10,17 @@
 
 ### 2.2 Component Inventory
 
-| ID                | Type          | Shiny Widget/Renderer | Depends On                        | Job Story  |
-| ----------------- | ------------- | --------------------- | --------------------------------- | ---------- |
-| `filter_platform` | Input         | `ui.value_box()`      | None                              | #1, #2     |
-| `card_avg_views`  | Output        |  `@render.text`       | `filtered`                        | #2, #3     |
-| `filter_metric`   | Input         | `ui.input_select()`   | None                              | #3         |
-| `input_artist`    | Input         | `ui.input_text()`     | None                              | #1, #2, #3 |
-| `filtered_df`     | Reactive calc | `@reactive.calc`      | `input_artist`, `filter_platform` | #1, #2, #3 |
-| `card_avg_stream` | Output        | `@render.text`        | `filtered`                        | #1, #2     |
-| `card_avg_likes`  | Output        | `@render.text`        | `filtered`                        | #1, #2     |
-| `table_top5songs` | Output        | `@render.data_frame`  | `filtered`                        | #2         |
-| `plot_metric`     | Output        | `@render.plot`        | `filter_metric`, `filtered`       | #3         |
+| ID                | Type          | Shiny Widget/Renderer      | Depends On                        | Job Story  |
+| ----------------- | ------------- | -------------------------- | --------------------------------- | ---------- |
+| `filter_platform` | Input         | `ui.input_radio_buttons()` | None                              | #1, #2     |
+| `card_avg_views`  | Output        | `@render.text`             | `filtered`                        | #2, #3     |
+| `filter_metric`   | Input         | `ui.input_select()`        | None                              | #3         |
+| `input_artist`    | Input         | `ui.input_text()`          | None                              | #1, #2, #3 |
+| `filtered`        | Reactive calc | `@reactive.calc`           | `input_artist`, `filter_platform` | #1, #2, #3 |
+| `card_avg_stream` | Output        | `@render.ui`               | `filtered`                        | #1, #2     |
+| `card_avg_likes`  | Output        | `@render.ui`               | `filtered`                        | #1, #2     |
+| `top_5`           | Output        | `@render.data_frame`       | `filtered`                        | #2         |
+| `scatter_plot`    | Output        | `@render.widget`           | `filter_metric`, `filtered`       | #3         |
 
 ### 2.3 Reactivity Diagram
 
@@ -39,6 +39,37 @@ flowchart TD
 ### 2.4 Calculation Details
 
 **`filtered_df`**
+
 - **Depends on:** `input_artist`, `filter_platform`
 - **Transformation:** Filters rows to the selected artist and platform. If specific artist is not selected, artist "Beyonce" is set as default. If specific platform is not selected, platform "Both" is set as default.
 - **Consumed by:** `card_avg_views`, `card_avg_stream`, `card_avg_likes`, `table_top5songs`, `plot_metric`
+
+**`card_avg_stream`**
+
+- **Depends on:** `filtered`
+- **Transformation:** Computes the mean of the `Stream` column from the filtered dataframe. If all values are 0, returns "0". Result is formatted as a comma-separated integer string (e.g. `836,260,550`).
+- **Consumed by:** `ui.value_box` (Avg. Stream card)
+
+**`card_avg_likes`**
+
+- **Depends on:** `filtered`
+- **Transformation:** Computes the mean of the `Likes` column from the filtered dataframe. If all values are 0, returns "0". Result is formatted as a comma-separated integer string.
+- **Consumed by:** `ui.value_box` (Avg. Likes card)
+
+**`card_avg_views`**
+
+- **Depends on:** `filtered`
+- **Transformation:** Computes the mean of the `Views` column from the filtered dataframe. If all values are 0, returns "0". Result is formatted as a comma-separated integer string.
+- **Consumed by:** `ui.value_box` (Avg. Views card)
+
+**`top_5`**
+
+- **Depends on:** `filtered`
+- **Transformation:** Sorts the filtered dataframe by `Stream` descending and selects the top 5 rows. Only the columns `Track`, `Album`, `most_playedon`, and `Stream` are retained and rendered as a `DataGrid`.
+- **Consumed by:** Top 5 Songs card table
+
+**`scatter_plot`**
+
+- **Depends on:** `filter_metric`, `filtered`
+- **Transformation:** Maps the selected metric label to its column name via `METRIC_COLUMN_MAP`. Drops rows with NaN in the metric column, then melts the filtered dataframe from wide to long format using all available `NUMERICAL_FEATURES` as value variables. Each row in the melted dataframe represents one (song, audio feature) pair, plotted with the metric on the x-axis and feature value on the y-axis, coloured by feature name.
+- **Consumed by:** Scatter plot widget

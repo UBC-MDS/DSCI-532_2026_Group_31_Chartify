@@ -3,5 +3,5 @@ pandas>=2.0
 numpy>=1.24
 shiny==0.9.0
 kagglehub==1.0.0
-shinywidgets==0.7.1
 scikit-learn==1.8.0
+shinywidgets==0.2.1
