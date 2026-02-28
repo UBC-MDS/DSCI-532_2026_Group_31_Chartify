@@ -13,7 +13,7 @@
 | ID                | Type          | Shiny Widget/Renderer | Depends On                        | Job Story  |
 | ----------------- | ------------- | --------------------- | --------------------------------- | ---------- |
 | `filter_platform` | Input         | `ui.value_box()`      | None                              | #1, #2     |
-| `card_avg_views`  | Output        |  `@render.text`       | 'filtered'                        | #2, #3     |
+| `card_avg_views`  | Output        |  `@render.text`       | `filtered`                        | #2, #3     |
 | `filter_metric`   | Input         | `ui.input_select()`   | None                              | #3         |
 | `input_artist`    | Input         | `ui.input_text()`     | None                              | #1, #2, #3 |
 | `filtered_df`     | Reactive calc | `@reactive.calc`      | `input_artist`, `filter_platform` | #1, #2, #3 |
