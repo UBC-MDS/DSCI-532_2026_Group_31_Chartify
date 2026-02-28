@@ -1,5 +1,4 @@
 from shiny import App, ui, render, reactive
-import plotly.express as px
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import MinMaxScaler
