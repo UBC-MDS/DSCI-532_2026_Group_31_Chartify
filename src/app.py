@@ -161,8 +161,9 @@ def server(input, output, session):
     def top_5():
         df_top5 = filtered()
         df_top5 = df_top5.sort_values(by=['Stream'], ascending = False)
-        df_top5 = df_top5[['Track', 'Album', 'most_playedon', 'Stream']].iloc[:5]
-        
+        df_top5 = df_top5.rename(columns={"most_playedon":"Most Played On", "Stream":"Streams"})
+        df_top5 = df_top5[['Track', 'Album', 'Most Played On', 'Streams']].iloc[:5]
+        df_top5["Streams"] = df_top5["Streams"].apply(lambda x : "{:,.0f}".format(x))
         return render.DataGrid(df_top5)
     
     @output
@@ -181,7 +182,7 @@ def server(input, output, session):
         df = filtered()
         if (df["Stream"] != 0).any():
             avg_stream = df["Stream"].mean()
-            display = f"{avg_stream:,0f}"
+            display = f"{avg_stream:,.0f}"
         else:
             display = "0"
             
@@ -192,7 +193,7 @@ def server(input, output, session):
         df = filtered()
         if (df["Likes"] != 0).any():
             avg_likes = df["Likes"].mean()
-            display = f"{avg_likes:,0f}"
+            display = f"{avg_likes:,.0f}"
         else:
             display = "0"
             
