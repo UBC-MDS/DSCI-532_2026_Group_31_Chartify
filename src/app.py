@@ -7,15 +7,27 @@ from . import get_data as gd
 
 df = gd.get_data()
 
-# Base scatter figure
-def make_scatter():
-    return px.scatter(
-        df,
-        x="streams",
-        y="energy",
-        color="artist",
-        title="Energy vs. Streams (placeholder data)",
-    )
+# Map dropdown metric names to dataframe column names
+METRIC_COLUMN_MAP = {
+    "Streams": "Stream",
+    "Likes": "Likes",
+    "Views": "Views",
+    "Comments": "Comments",
+}
+
+# Numerical audio features to show on y-axis (colour coded)
+NUMERICAL_FEATURES = [
+    "Danceability",
+    "Energy",
+    "Loudness",
+    "Speechiness",
+    "Acousticness",
+    "Instrumentalness",
+    "Liveness",
+    "Valence",
+    "Tempo",
+    "Duration_min",
+]
 
 
 app_ui = ui.page_fluid(
@@ -106,7 +118,7 @@ app_ui = ui.page_fluid(
             ui.br(),
 
             # Scatter plot
-            ui.output_plot("scatter_plot", height="400px"),
+            ui.output_widget("scatter_plot", height="400px"),
 
             ui.br(),
 
@@ -152,9 +164,42 @@ def server(input, output, session):
         return filtered_df
 
     @output
-    @render.plot
+    @render.plotly
     def scatter_plot():
-        return make_scatter()
+        data = filtered()
+        metric_label = input.filter_metric()
+        metric_col = METRIC_COLUMN_MAP.get(metric_label, "Stream")
+
+        if data.empty or metric_col not in data.columns:
+            return px.scatter(title="No data to display").update_layout(
+                template="plotly_dark", paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)"
+            )
+
+        # Reshape to long format: one row per (song, feature) with metric on x, feature value on y
+        features_present = [f for f in NUMERICAL_FEATURES if f in data.columns]
+        plot_df = data.melt(
+            id_vars=[metric_col, "Track"],
+            value_vars=features_present,
+            var_name="Feature",
+            value_name="Feature Value",
+        )
+
+        fig = px.scatter(
+            plot_df,
+            x=metric_col,
+            y="Feature Value",
+            color="Feature",
+            hover_data=["Track"],
+            title=f"{metric_label} vs. Audio Features",
+        )
+        fig.update_layout(
+            template="plotly_dark",
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(0,0,0,0)",
+            font=dict(color="white"),
+            legend=dict(bgcolor="rgba(0,0,0,0)"),
+        )
+        return fig
     
     @output
     @render.data_frame
