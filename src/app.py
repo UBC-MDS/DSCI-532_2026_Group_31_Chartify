@@ -120,7 +120,7 @@ app_ui = ui.page_fluid(
 
         ui.br(),
 
-        ui.column(6, ui.card(ui.h4("Top 5 Songs"), ui.output_data_frame("top_5"))),
+        ui.column(12, ui.card(ui.h4("Top 5 Songs"), ui.output_data_frame("top_5"))),
     ),
 )
 
