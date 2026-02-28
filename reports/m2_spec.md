@@ -20,7 +20,7 @@
 | `card_avg_stream` | Output        | `@render.ui`               | `filtered`                        | #1, #2     |
 | `card_avg_likes`  | Output        | `@render.ui`               | `filtered`                        | #1, #2     |
 | `top_5`           | Output        | `@render.data_frame`       | `filtered`                        | #2         |
-| `scatter_plot`    | Output        | `@render.widget`           | `filter_metric`, `filtered`       | #3         |
+| `scatter_plot`    | Output        | `@render.plot`             | `filter_metric`, `filtered`       | #3         |
 
 ### 2.3 Reactivity Diagram
 
@@ -71,5 +71,5 @@ flowchart TD
 **`scatter_plot`**
 
 - **Depends on:** `filter_metric`, `filtered`
-- **Transformation:** Maps the selected metric label to its column name via `METRIC_COLUMN_MAP`. Drops rows with NaN in the metric column, then melts the filtered dataframe from wide to long format using all available `NUMERICAL_FEATURES` as value variables. Each row in the melted dataframe represents one (song, audio feature) pair, plotted with the metric on the x-axis and feature value on the y-axis, coloured by feature name.
+- **Transformation:** Maps the selected metric label to its column name via `METRIC_COLUMN_MAP`. Drops rows with NaN in the metric column, then melts the filtered dataframe from wide to long format using all available `NUMERICAL_FEATURES` as value variables. Each row in the melted dataframe represents one (song, audio feature) pair, plotted with the metric on the x-axis and feature values on the y-axis, coloured by feature name.
 - **Consumed by:** Scatter plot widget
