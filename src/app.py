@@ -28,13 +28,26 @@ NUMERICAL_FEATURES = [
 app_ui = ui.page_fluid(
 
     ui.tags.style("""
-        * { font-family: Helvetica, sans-serif; }
-        body { background-color: #191414; color: white; }
-        .card { background-color: #1e1e1e; border-color: #333333; color: white; }
-        .card h4 { color: white; }
-        .form-control { background-color: #2a2a2a; color: white; border-color: #333333; }
-        .form-control::placeholder { color: #888888; }
-    """),
+    * { font-family: Helvetica, sans-serif; }
+    body { background-color: #191414; color: white; }
+    .card { background-color: #1e1e1e; border-color: #333333; color: white; }
+    .card h4 { color: white; }
+    .form-control { background-color: #2a2a2a; color: white; border-color: #333333; }
+    .form-control::placeholder { color: #888888; }
+    
+    /* Fix table header text */
+    thead th, .shiny-data-grid thead th {
+        color: #000000 !important;
+        background-color: #c8c8c8 !important;
+    }
+    
+    /* Fix radio button label visibility */
+    .shiny-input-radiogroup label,
+    .control-label,
+    .radio label {
+        color: white !important;
+    }
+"""),
 
     ui.h1("Music Analytics Dashboard"),
 
@@ -49,33 +62,25 @@ app_ui = ui.page_fluid(
             ui.input_radio_buttons("filter_platform", "Platform",
                                    choices=["Spotify", "Youtube", "Both"],
                                    selected="Both"),
-            ui.input_radio_buttons("filter_licensed", "Licensed",
-                                   choices=["Yes", "No", "All"],
-                                   selected="All"),
             width=300,
         ),
 
         ui.row(
-            ui.column(3, ui.value_box(title="Avg. Stream",
+            ui.column(4, ui.value_box(title="Avg. Stream",
                                       value=ui.output_ui("card_avg_stream"))),
-            ui.column(3, ui.value_box(title="Avg. Likes",
+            ui.column(4, ui.value_box(title="Avg. Likes",
                                       value=ui.output_ui("card_avg_likes"))),
-            ui.column(3, ui.value_box(title="Avg. Views",
+            ui.column(4, ui.value_box(title="Avg. Views",
                                       value=ui.output_text("card_avg_views"))),
-            ui.column(3, ui.card(ui.strong("Avg. Duration"), ui.p("—"))),
         ),
 
         ui.br(),
 
-        output_widget("scatter_plot", height="400px"),  # ✅ fixed
+        output_widget("scatter_plot", height="400px"),
 
         ui.br(),
 
-        ui.row(
-            ui.column(6, ui.card(ui.h4("Top 5 Songs"), ui.output_data_frame("top_5"))),
-            ui.column(6, ui.card(ui.h4("Avg. Audio Features (Bar)"),
-                                 ui.p("Bar chart of average speechiness, energy, danceability, loudness."))),
-        ),
+        ui.column(6, ui.card(ui.h4("Top 5 Songs"), ui.output_data_frame("top_5"))),
     ),
 )
 
@@ -91,7 +96,7 @@ def server(input, output, session):
             filtered_df = filtered_df[filtered_df["most_playedon"] == platform]
         return filtered_df
 
-    @render_widget  # ✅ fixed
+    @render_widget
     def scatter_plot():
         data = filtered()
         metric_label = input.filter_metric()
@@ -134,15 +139,15 @@ def server(input, output, session):
             return f"{round(data['Views'].mean(), 0):,.0f}"
         return "0"
 
-    @output  # ✅ added missing @output
-    @render.ui  # ✅ changed to render.ui since it's inside output_ui
+    @output
+    @render.ui
     def card_avg_stream():
         data = filtered()
         avg = data["Stream"].mean() if (data["Stream"] != 0).any() else 0
         return f"{avg:,.0f}"
 
-    @output  # ✅ added missing @output
-    @render.ui  # ✅ changed to render.ui
+    @output
+    @render.ui
     def card_avg_likes():
         data = filtered()
         avg = data["Likes"].mean() if (data["Likes"] != 0).any() else 0
