@@ -1,7 +1,8 @@
 from shiny import App, ui, render, reactive
-from shinywidgets import output_widget, render_widget
 import plotly.express as px
 import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import MinMaxScaler
 import numpy as np
 try:
     from . import get_data as gd
@@ -115,7 +116,7 @@ app_ui = ui.page_fluid(
 
         ui.br(),
 
-        output_widget("scatter_plot", height="400px"),
+        ui.output_plot("scatter_plot", height="800px"),
 
         ui.br(),
 
@@ -135,31 +136,57 @@ def server(input, output, session):
             filtered_df = filtered_df[filtered_df["most_playedon"] == platform]
         return filtered_df
 
-    @render_widget
+    @output
+    @render.plot
     def scatter_plot():
-        data = filtered()
+        data = filtered().copy()
         metric_label = input.filter_metric()
         metric_col = METRIC_COLUMN_MAP.get(metric_label, "Stream")
+
         if data.empty or metric_col not in data.columns:
-            return px.scatter(title="No data to display").update_layout(
-                template="plotly_dark",
-                paper_bgcolor="rgba(0,0,0,0)",
-                plot_bgcolor="rgba(0,0,0,0)"
-            )
+            fig, ax = plt.subplots(facecolor="#191414")
+            ax.text(0.5, 0.5, "No data to display", ha="center", va="center", color="white")
+            ax.set_facecolor("#191414")
+            return fig
+
+
         features_present = [f for f in NUMERICAL_FEATURES if f in data.columns]
-        plot_df = data.dropna(subset=[metric_col]).melt(
-            id_vars=[metric_col, "Track"],
-            value_vars=features_present,
-            var_name="Feature",
-            value_name="Feature Value",
-        )
-        fig = px.scatter(plot_df, x=metric_col, y="Feature Value", color="Feature",
-                         hover_data=["Track"], title=f"{metric_label} vs. Audio Features")
-        fig.update_layout(
-            template="plotly_dark", paper_bgcolor="rgba(0,0,0,0)",
-            plot_bgcolor="rgba(0,0,0,0)", font=dict(color="white"),
-            legend=dict(bgcolor="rgba(0,0,0,0)")
-        )
+        data[features_present] = MinMaxScaler().fit_transform(data[features_present])
+
+        ncols = 3
+        nrows = -(-len(features_present) // ncols)
+        fig, axes = plt.subplots(nrows, ncols, figsize=(15, 4 * nrows), facecolor="#191414")
+        axes = axes.flatten()
+
+        BRAND_COLORS = [
+            "#1DB954", "#FC55FF", "#3FFF00", "#FF7733",
+            "#A0D6A0", "#FF6B9D", "#00D4FF", "#FFE135",
+            "#FF4500", "#9B59B6"
+        ]
+
+        for i, feature in enumerate(features_present):
+            ax = axes[i]
+            ax.set_facecolor("#1e1e1e")
+            plot_data = data[[metric_col, feature]].dropna()
+            ax.scatter(plot_data[metric_col], plot_data[feature],
+                    color=BRAND_COLORS[i % len(BRAND_COLORS)], alpha=0.7, s=60, edgecolors="none")
+            m, b = np.polyfit(plot_data[metric_col], plot_data[feature], 1)
+            x_line = np.linspace(plot_data[metric_col].min(), plot_data[metric_col].max(), 100)
+            ax.plot(x_line, m * x_line + b, color="white", linewidth=1.2, alpha=0.6)
+            ax.set_title(feature, color="white", fontsize=10, fontweight="bold")
+            ax.set_xlabel(f"{metric_label} (millions)", color="white", fontsize=8)
+            ax.xaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f"{x/1e6:.0f}M"))
+            ax.tick_params(colors="white")
+            for spine in ax.spines.values():
+                spine.set_edgecolor("#1DB954")
+
+        for j in range(i + 1, len(axes)):
+            axes[j].set_visible(False)
+
+        fig.suptitle(f"Audio Features vs {metric_label}: {input.artist()}",
+                    color="white", fontsize=14, fontweight="bold")
+        fig.tight_layout(rect=[0, 0, 1, 0.96])  # leave room for suptitle
+        plt.subplots_adjust(hspace=0.5, wspace=0.35)
         return fig
 
     @output
