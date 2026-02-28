@@ -181,7 +181,7 @@ def server(input, output, session):
         df = filtered()
         if (df["Stream"] != 0).any():
             avg_stream = df["Stream"].mean()
-            display = f"{avg_stream:,0f}"
+            display = f"{avg_stream:,.0f}"
         else:
             display = "0"
             
@@ -192,7 +192,7 @@ def server(input, output, session):
         df = filtered()
         if (df["Likes"] != 0).any():
             avg_likes = df["Likes"].mean()
-            display = f"{avg_likes:,0f}"
+            display = f"{avg_likes:,.0f}"
         else:
             display = "0"
             
