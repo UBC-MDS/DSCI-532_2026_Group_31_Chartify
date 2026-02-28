@@ -135,7 +135,7 @@ def server(input, output, session):
     
     # Create reactive calc to be used in overall display. Needs an Input
     # Of Artist and Platform. Default Selections are Beyonce and No Platforms.
-        
+    @reactive.calc
     def filtered():
         # Default filtered_df is Beyonce with both platforms selected
         artist = input.artist().strip()
@@ -176,7 +176,7 @@ def server(input, output, session):
         else:
             return "0"
 
-    @render.ui
+    @render.text
     def card_avg_stream():
         df = filtered()
         if (df["Stream"] != 0).any():
@@ -187,7 +187,7 @@ def server(input, output, session):
             
         return ui.value_box("Average Stream", display)
 
-    @render.ui
+    @render.text
     def card_avg_likes():
         df = filtered()
         if (df["Likes"] != 0).any():
