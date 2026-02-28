@@ -1,12 +1,75 @@
 # App Specification
-## 2.1 Updated Job Stories
 
-| #   | Job Story                       | Status (✅, 🔄, ⏳)      | Notes                         |
-| --- | ------------------------------- | -------------- | ----------------------------- |
-| 1   |  As a record label executive, I want to predict which platform a song will do better in, based on selected features, in order to determine what marketing tactics are better to invest in. |  ⏳ Pending |                               |
-| 2   |  As a music producer, I want to visualize how filtering for song elements such as danceability, tempo, or acousticness will affect song popularity (at either high or low values) in order to guide me in my songwriting process. |  ⏳ Pending |                               |
-| 3   | As a music producer, I want to select the most liked songs on Youtube, in order to determine which genres perform best on a video platform. |  ⏳ Pending |                               |
+### 2.1 Updated Job Stories
 
-## 2.2 Component Inventory
-## 2.3 Reactivity Diagram
-## 2.4 Calculation Details
+| #   | Job Story                                                                                                                                                                         | Status      | Notes |
+| --- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ----- |
+| 1   | When I have to market a new song, I want to know which platform it is likely to perform better on so I can focus my resources.                                                    | Implemented ✅ |       |
+| 2   | When I am writing a new song for Youtube, I want to see the most liked/viewed songs on that platform so I can determine what song features are associated with stream popularity. | Implemented ✅ |       |
+| 3   | When I am producing a new song, I want to see what song features perform best with specific KPI metrics so I know how to tailor my production process for high performance.       | Implemented ✅ |       |
+
+### 2.2 Component Inventory
+
+| ID                | Type          | Shiny Widget/Renderer      | Depends On                        | Job Story  |
+| ----------------- | ------------- | -------------------------- | --------------------------------- | ---------- |
+| `filter_platform` | Input         | `ui.input_radio_buttons()` | None                              | #1, #2     |
+| `filter_metric`   | Input         | `ui.input_select()`        | None                              | #3         |
+| `input_artist`    | Input         | `ui.input_text()`          | None                              | #1, #2, #3 |
+| `filtered`        | Reactive calc | `@reactive.calc`           | `input_artist`, `filter_platform` | #1, #2, #3 |
+| `card_avg_views`  | Output        | `@render.text`             | `filtered`                        | #2, #3     |
+| `card_avg_stream` | Output        | `@render.ui`               | `filtered`                        | #1, #2     |
+| `card_avg_likes`  | Output        | `@render.ui`               | `filtered`                        | #1, #2     |
+| `top_5`           | Output        | `@render.data_frame`       | `filtered`                        | #2         |
+| `scatter_plot`    | Output        | `@render.plot`             | `filter_metric`, `filtered`       | #3         |
+
+### 2.3 Reactivity Diagram
+
+```mermaid
+flowchart TD
+  In1[/input_artist/] --> F{{filtered_df}}
+  In2[/filter_platform/] --> F
+  In3[/filter_metric/] --> P1([plot_metric])
+  F --> C1([card_avg_views])
+  F --> C2([card_avg_stream])
+  F --> C3([card_avg_likes])
+  F --> T1([table_top5songs])
+  F --> P1
+```
+
+### 2.4 Calculation Details
+
+**`filtered`**
+
+- **Depends on:** `input_artist`, `filter_platform`
+- **Transformation:** Filters rows to the selected artist and platform. If specific artist is not selected, artist "Beyonce" is set as default. If specific platform is not selected, platform "Both" is set as default.
+- **Consumed by:** `card_avg_views`, `card_avg_stream`, `card_avg_likes`, `table_top5songs`, `plot_metric`
+
+**`card_avg_stream`**
+
+- **Depends on:** `filtered`
+- **Transformation:** Computes the mean of the `Stream` column from the filtered dataframe. If all values are 0, returns "0". Result is formatted as a comma-separated integer string (e.g. `836,260,550`).
+- **Consumed by:** `ui.value_box` (Avg. Stream card)
+
+**`card_avg_likes`**
+
+- **Depends on:** `filtered`
+- **Transformation:** Computes the mean of the `Likes` column from the filtered dataframe. If all values are 0, returns "0". Result is formatted as a comma-separated integer string.
+- **Consumed by:** `ui.value_box` (Avg. Likes card)
+
+**`card_avg_views`**
+
+- **Depends on:** `filtered`
+- **Transformation:** Computes the mean of the `Views` column from the filtered dataframe. If all values are 0, returns "0". Result is formatted as a comma-separated integer string.
+- **Consumed by:** `ui.value_box` (Avg. Views card)
+
+**`top_5`**
+
+- **Depends on:** `filtered`
+- **Transformation:** Sorts the filtered dataframe by `Stream` descending and selects the top 5 rows. Only the columns `Track`, `Album`, `most_playedon`, and `Stream` are retained and rendered as a `DataGrid`.
+- **Consumed by:** Top 5 Songs card table
+
+**`scatter_plot`**
+
+- **Depends on:** `filter_metric`, `filtered`
+- **Transformation:** Maps the selected metric label to its column name via `METRIC_COLUMN_MAP`. Drops rows with NaN in the metric column, then melts the filtered dataframe from wide to long format using all available `NUMERICAL_FEATURES` as value variables. Each row in the melted dataframe represents one (song, audio feature) pair, plotted with the metric on the x-axis and feature values on the y-axis, coloured by feature name.
+- **Consumed by:** Scatter plot widget
