@@ -2,6 +2,7 @@ import pandas as pd
 import kagglehub
 from kagglehub import KaggleDatasetAdapter
 import unicodedata
+from sklearn.preprocessing import MinMaxScaler
 
 
 def get_data():
@@ -26,5 +27,14 @@ def get_data():
     df['Album'] = df['Album'].apply(normalize_text)
     df['Track'] = df['Track'].apply(normalize_text)
     df['Title'] = df['Title'].apply(normalize_text)
+    
+    # Create MinMax Scaler for All Song Attributes To Place Them On A Uniform Scale
+    scaler = MinMaxScaler(feature_range=(0, 10))
+    song_feature = ['Danceability', 'Energy','Loudness', 'Speechiness', 'Acousticness',
+                    'Instrumentalness','Liveness', 'Valence', 'Tempo', 'EnergyLiveness']
+    
+    # Apply scaling to all song feature columns
+    for feature in song_feature:
+        df[feature] = scaler.fit_transform(df[[feature]])
     
     return df 

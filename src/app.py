@@ -166,8 +166,10 @@ def server(input, output, session):
     @render.data_frame
     def top_5():
         df_top5 = filtered()
-        df_top5 = df_top5.sort_values(by=["Stream"], ascending=False)
-        df_top5 = df_top5[["Track", "Album", "most_playedon", "Stream"]].iloc[:5]
+        df_top5 = df_top5.sort_values(by=['Stream'], ascending = False)
+        df_top5 = df_top5.rename(columns={"most_playedon":"Most Played On", "Stream":"Streams"})
+        df_top5 = df_top5[['Track', 'Album', 'Most Played On', 'Streams']].iloc[:5]
+        df_top5["Streams"] = df_top5["Streams"].apply(lambda x : "{:,.0f}".format(x))
         return render.DataGrid(df_top5)
 
     @output

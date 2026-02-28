@@ -1,20 +1,35 @@
-# Contributing to [Project Name]
+# Contributing to Chartify
+
+Thank you for your interest in Chartify! Please read below to learn how to contribute to the project. 
+
+## Development Installation
+
+To install the required packages and run the app locally, copy and paste the following code into your terminal.
+
+```bash
+# After opening a terminal:
+git clone https://github.com/UBC-MDS/DSCI-532_2026_Group_31_Chartify.git
+cd DSCI-532_2026_Group_31_Chartify/
+
+# Optional (but suggested): make a fresh environment
+conda create -n chartify python=3.11 # will install auto-pip gracefully 
+conda activate chartify
+pip install -r requirements.txt
+
+# Run draft application locally  
+python src/app.py # → http://127.0.0.1:8050
+
+# Optional (but suggested): deactivate environment when done
+conda deactivate
+```
 
 ## Getting Started
 
-1. Fork the repository
-2. Clone your fork: `git clone https://github.com/yourusername/repo.git`
-3. Create a feature branch: `git checkout -b feature/your-feature`
+Once you have the repository running on your local:
+1. Create a feature branch: `git checkout -b feature/your-feature`
+2. Add your feature as needed. 
+3. See instruction below for instructions for submitting your changes. 
 
-## Development Setup
-
-```bash
-# Install dependencies
-pip install -r requirements.txt
-
-# Run tests
-pytest
-```
 
 ## Guidelines
 
