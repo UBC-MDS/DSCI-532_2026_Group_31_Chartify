@@ -13,7 +13,7 @@
 
 ### Changed
 
-N/A, this is the first deployed iteration
+The original sketch had one scatterplot with all features graphed on it, however, for MS2 we are using a scatterplot grid instead, as the single plot was not working/readable.
 
 ### Fixed
 
@@ -44,4 +44,4 @@ N/A, this is the first deployed iteration
 
 **Limitations**: Small number of data points per artist limits the interpretability of the lines of best fit. Scatter plots are static (no hover/tooltip in matplotlib).
 
-**Future Improvements**: Add interactivity back to scatter plot (e.g. Plotly once shinywidgets compatibility is resolved). Add artist search suggestions/autocomplete. Surface tooltip with song name on hover. Additional components and visualizations such as a bar chart to display the average song feature metrics by artist searched. 
+**Future Improvements**: Add interactivity back to scatter plot (e.g. Plotly once shinywidgets compatibility is resolved). Add artist search suggestions/autocomplete. Surface tooltip with song name on hover. Additional components and visualizations such as a bar chart to display the average song feature metrics by artist searched.
