@@ -13,7 +13,8 @@
 
 ### Changed
 
-The original sketch had one scatterplot with all features graphed on it, however, for MS2 we are using a scatterplot grid instead, as the single plot was not working/readable.
+- From the original sketch with one scatterplot (and all features graphed on it), changed to using a scatterplot grid for Milestone 2 instead. This is due the the single-plot method not working and/or being unreadable.
+- The layout of the dashboard has changed from milestone 1 -> 2. It has been significantly minimized due to current time constraints. More information found in the "Layout Changes" section in the Reflection below.
 
 ### Fixed
 
@@ -26,13 +27,26 @@ N/A, this is the first deployed iteration
 
 ### Reflection
 
+**Implementation Status**: Core filtering, summary cards, top 5 table, and scatter plot grid are all functional and deployed on Posit Cloud.
+
 #### Job Stories Status
 
-- **Fully Implemented**: #2 (top 5 songs table, avg. metric cards), #3 (scatter plot of audio features vs. metric)
-- **Partially Done**: #1
-- **Pending M3**: all (for improvements)
+- **Fully Implemented**: #1, (platform and artist filter, avg. metric cards), #2 (top 5 songs table, avg. metric cards), #3 (scatter plot of audio features vs. metric)
+- **Partially/Mostly Done**: -None-
+- **Pending M3**: all -> just for further improvements
 
-**Implementation Status**: Core filtering, summary cards, top 5 table, and scatter plot grid are all functional and deployed on Posit Cloud.
+#### Layout Changes:
+
+The following sketched visuals from Milestone 1 have not been implemented due to time constraints:
+ - "Platform and Licensed breakdown"
+ - "Singles %%" & "Albums %%"
+ - "Song Duration (Avg)"
+ - Bar chart of song features (Energy, Loudness, Speechiness etc.)
+ - "Song Scope" and "Licensed" radio button filters
+ - "Song Feature(s)" dropdown/Search box + Slider
+ - "Metric of interest" dropdown/Search box.
+
+These may or may not be incorporated in further future developments.
 
 **Deviations from Plan**: Switched from Plotly to Matplotlib for the scatter plot due to `shinywidgets` incompatibility with the Posit Cloud Shiny version. The original plan called for a single overlaid scatter plot; this was changed to a grid of subplots per feature for clarity.
 
