@@ -24,13 +24,13 @@ N/A, this is the first deployed iteration
 - X-axis labels on scatter subplots can overlap at smaller window sizes
 - Value boxes may show `NaN` if artist has no data for a given metric
 
-### Job Stories Status
+### Reflection
+
+#### Job Stories Status
 
 - **Fully Implemented**: #2 (top 5 songs table, avg. metric cards), #3 (scatter plot of audio features vs. metric)
 - **Partially Done**: #1
 - **Pending M3**: all (for improvements)
-
-### Reflection
 
 **Implementation Status**: Core filtering, summary cards, top 5 table, and scatter plot grid are all functional and deployed on Posit Cloud.
 
