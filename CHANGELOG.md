@@ -1,5 +1,5 @@
-## [0.2.0] - 2026-03-01
-#### Added
+# [0.2.0] - 2026-02-28
+### Added
 
 - App specification `m2_spec.md` file #42 #43 
 - Within `m2_spec.md`  added component inventory (#48) and mermaid chart #49
@@ -15,15 +15,15 @@
 - Top 5 songs table for artist of choice #55
 - Scatter plot grid showing all audio features vs. selected metric, with line of best fit per subplot #51 #54
 
-#### Changed
+### Changed
 - the data loading process and a get_data.py script #44 #45
 - updated requirements.txt #44 #52 #56
 - instructions for contributions #57
 - From the original sketch with one scatterplot (and all features graphed on it), changed to using a scatterplot grid for Milestone 2 instead. This is due the the single-plot method not working and/or being unreadable.
 - The layout of the dashboard has changed from milestone 1 -> 2. It has been significantly minimized due to current time constraints. More information found in the "Layout Changes" section in the Reflection below.
-#### Fixed
+### Fixed
 - update app to shiny format #40
-#### Known Issues
+### Known Issues
 - X-axis labels on scatter subplots can overlap at smaller window sizes
 - Value boxes may show `NaN` if artist has no data for a given metric
 
@@ -37,7 +37,7 @@
 - **Partially/Mostly Done**: -None-
 - **Pending M3**: all -> just for further improvements
 
-#### Layout Changes:
+### Layout Changes:
 
 The following sketched visuals from Milestone 1 have not been implemented due to time constraints:
  - "Platform and Licensed breakdown"
@@ -61,3 +61,17 @@ These may or may not be incorporated in further future developments.
 **Limitations**: Small number of data points per artist limits the interpretability of the lines of best fit. Scatter plots are static (no hover/tooltip in matplotlib).
 
 **Future Improvements**: Add interactivity back to scatter plot (e.g. Plotly once shinywidgets compatibility is resolved). Add artist search suggestions/autocomplete. Surface tooltip with song name on hover. Additional components and visualizations such as a bar chart to display the average song feature metrics by artist searched.
+
+# [0.2.0] - 2026-02-21
+### Added
+
+- dataset selection discussion found in  issue #1 closed 
+- add app description to readme #15 for issue #2
+- populate motivation & purpose in Proposal.md #16 for issue #8 
+- create section 3: usage scenarios in proposal doc #17 for issue #10
+- expand proposal with dataset description section #18 for issue #9 
+- add section 4 for proposal.md and EDA notebook #19 for issue #12
+- sketch and description #20 for issue #13
+- create a skeleton app script #21 for issue #1 & #11 
+- expand install instructions + description.md #22 for issue #2 
+
