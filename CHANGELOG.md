@@ -1,35 +1,37 @@
 ## [0.2.0] - 2026-03-01
+#### Added
 
-### Added
+- App specification `m2_spec.md` file #42 #43 
+- Within `m2_spec.md`  added component inventory (#48) and mermaid chart #49
+- created `.gitignore` file for extra files created by kagglehub data loaded #44
+- Metrics cards displaying average KPI counts #46 #49
+- Added 2 Posit Connect Cloud links to readme #57
+- Created Chartify brand styling: Spotify green (`#1DB954`) card outlines, table headers, and sidebar border #45
+- Circular Std / Helvetica font applied across the dashboard #45
+- Dark sidebar background (`#111111`) with green border separator #45
+- reactive.cal #44
+- Created dropdown menus to select a metric of interest and an artist #44
+- Clickable choice box to select platform(s) of interest #47
+- Top 5 songs table for artist of choice #55
+- Scatter plot grid showing all audio features vs. selected metric, with line of best fit per subplot #51 #54
 
-- Scatter plot grid showing all audio features vs. selected metric, with line of best fit per subplot
-- Chartify brand styling: Spotify green (`#1DB954`) card outlines, table headers, and sidebar border
-- Circular Std / Helvetica font applied across the dashboard
-- Dark sidebar background (`#111111`) with green border separator
-- Metrics cards displaying average feature counts
-- Dropdown menus to select a metric of interest and an artist
-- Clickable choice box to select platform(s) of interest
-- Top 5 songs table for artist of choice
-
-### Changed
-
+#### Changed
+- the data loading process and a get_data.py script #44 #45
+- updated requirements.txt #44 #52 #56
+- instructions for contributions #57
 - From the original sketch with one scatterplot (and all features graphed on it), changed to using a scatterplot grid for Milestone 2 instead. This is due the the single-plot method not working and/or being unreadable.
 - The layout of the dashboard has changed from milestone 1 -> 2. It has been significantly minimized due to current time constraints. More information found in the "Layout Changes" section in the Reflection below.
-
-### Fixed
-
-N/A, this is the first deployed iteration
-
-### Known Issues
-
+#### Fixed
+- update app to shiny format #40
+#### Known Issues
 - X-axis labels on scatter subplots can overlap at smaller window sizes
 - Value boxes may show `NaN` if artist has no data for a given metric
 
-### Reflection
+## Reflection
 
 **Implementation Status**: Core filtering, summary cards, top 5 table, and scatter plot grid are all functional and deployed on Posit Cloud.
 
-#### Job Stories Status
+### Job Stories Status
 
 - **Fully Implemented**: #1, (platform and artist filter, avg. metric cards), #2 (top 5 songs table, avg. metric cards), #3 (scatter plot of audio features vs. metric)
 - **Partially/Mostly Done**: -None-
